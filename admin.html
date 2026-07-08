@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Админка · Баатарай Ургоо</title>
+<script src="content.js"></script>
+<style>
+  :root{
+    --accent:#ff6a3d; --accent-d:#e8551f; --ink:#1c1a17; --muted:#8a8378;
+    --line:#e7e2d8; --bg:#f4f1ea; --card:#fff;
+    --font:'Inter','Segoe UI',system-ui,-apple-system,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:var(--font);color:var(--ink);background:var(--bg)}
+  /* ---- login ---- */
+  .login{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--bg);z-index:50}
+  .login .box{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:32px;width:340px;max-width:90vw;box-shadow:0 10px 40px rgba(0,0,0,.08);text-align:center}
+  .login h1{font-size:20px;margin:0 0 4px}
+  .login p{color:var(--muted);font-size:13px;margin:0 0 18px}
+  .login input{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:10px;font-size:15px;margin-bottom:12px}
+  .login .err{color:#c0392b;font-size:13px;min-height:18px;margin-bottom:6px}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:none;border-radius:10px;padding:11px 18px;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:.15s}
+  .btn-primary{background:var(--accent);color:#fff}.btn-primary:hover{background:var(--accent-d)}
+  .btn-ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}.btn-ghost:hover{border-color:var(--accent)}
+  .btn-pub{background:#1f9d55;color:#fff}.btn-pub:hover{background:#178045}
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;align-items:center;justify-content:center;z-index:70}
+  .modal.on{display:flex}
+  .modal .box{background:#fff;border-radius:14px;padding:24px;width:440px;max-width:92vw;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+  .modal h3{margin:0 0 6px}.modal p{color:var(--muted);font-size:13px;line-height:1.5;margin:0 0 12px}
+  .modal ol{font-size:13px;color:var(--ink);line-height:1.6;padding-left:18px;margin:0 0 12px}
+  .modal input{width:100%;padding:11px 13px;border:1px solid var(--line);border-radius:9px;font:inherit;margin-bottom:12px}
+  .modal .row{display:flex;gap:8px;justify-content:flex-end}
+  .modal a{color:var(--accent-d)}
+  .btn:disabled{opacity:.5;cursor:default}
+  /* ---- app ---- */
+  .app{display:none;height:100vh;grid-template-rows:auto 1fr}
+  .app.on{display:grid}
+  .topbar{display:flex;align-items:center;gap:14px;padding:10px 18px;background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+  .topbar .logo{font-weight:800;letter-spacing:.02em}
+  .topbar .logo small{display:block;font-weight:500;color:var(--muted);font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+  .topbar .sp{flex:1}
+  .save-state{font-size:12px;color:var(--muted);margin-right:6px}
+  .main{display:grid;grid-template-columns:minmax(380px,520px) 1fr;overflow:hidden}
+  .editor{overflow-y:auto;padding:18px;border-right:1px solid var(--line)}
+  .hint{background:#fff7f2;border:1px solid #ffd9c7;color:#8a4a2c;font-size:12.5px;border-radius:10px;padding:10px 12px;margin-bottom:14px;line-height:1.5}
+  .sec{background:var(--card);border:1px solid var(--line);border-radius:12px;margin-bottom:12px;overflow:hidden}
+  .sec>summary{list-style:none;cursor:pointer;padding:13px 15px;font-weight:700;display:flex;align-items:center;gap:8px;user-select:none}
+  .sec>summary::-webkit-details-marker{display:none}
+  .sec>summary .tw{margin-left:auto;color:var(--muted);transition:.15s}
+  .sec[open]>summary .tw{transform:rotate(90deg)}
+  .sec .body{padding:4px 15px 15px;border-top:1px solid var(--line)}
+  .fld{margin:12px 0}
+  .fld label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px;font-weight:600}
+  .fld input[type=text],.fld textarea{width:100%;padding:9px 11px;border:1px solid var(--line);border-radius:9px;font:inherit;font-size:14px;background:#fff}
+  .fld textarea{min-height:70px;resize:vertical;line-height:1.45}
+  .fld input:focus,.fld textarea:focus{outline:none;border-color:var(--accent)}
+  .item{border:1px dashed var(--line);border-radius:10px;padding:8px 12px;margin:10px 0;background:#faf9f6}
+  .item>.itemhead{font-size:12px;font-weight:700;color:var(--accent-d);margin:2px 0 6px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .itembtn{font-size:11px;padding:4px 9px;border-color:#e7c3b3;color:#b5502e;font-weight:600}
+  .itembtn:hover{border-color:#b5502e;background:#fff3ee}
+  .additem{width:100%;margin:8px 0 4px;font-size:13px}
+  .imgfld{display:flex;gap:10px;align-items:center}
+  .imgfld .thumb{width:64px;height:48px;border-radius:8px;object-fit:cover;border:1px solid var(--line);background:#eee;flex:none}
+  .imgfld .grow{flex:1;min-width:0}
+  .imgfld input[type=text]{font-size:12px}
+  .imgfld .up{font-size:12px;padding:7px 10px;white-space:nowrap}
+  .previewwrap{position:relative;background:#ddd}
+  .previewbar{position:absolute;top:8px;right:12px;z-index:5;display:flex;gap:8px}
+  iframe{width:100%;height:100%;border:0;background:#fff}
+  .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 18px;border-radius:10px;font-size:14px;opacity:0;pointer-events:none;transition:.25s;z-index:60}
+  .toast.on{opacity:1}
+  @media(max-width:900px){.main{grid-template-columns:1fr}.previewwrap{display:none}}
+</style>
+</head>
+<body>
+
+<!-- ЭКРАН ВХОДА -->
+<div class="login" id="login">
+  <div class="box">
+    <h1>Баатарай Ургоо</h1>
+    <p>Панель управления сайтом</p>
+    <div class="err" id="loginErr"></div>
+    <input type="password" id="pass" placeholder="Пароль" autocomplete="current-password" />
+    <button class="btn btn-primary" style="width:100%" onclick="tryLogin()">Войти</button>
+  </div>
+</div>
+
+<!-- ПРИЛОЖЕНИЕ -->
+<div class="app" id="app">
+  <div class="topbar">
+    <div class="logo">Баатарай&nbsp;Ургоо<small>Админка</small></div>
+    <div class="sp"></div>
+    <span class="save-state" id="saveState"></span>
+    <a class="btn btn-ghost" id="openSite" href="index.html" target="_blank">Открыть сайт ↗</a>
+    <button class="btn btn-primary" onclick="saveAll()">💾 Сохранить</button>
+    <button class="btn btn-pub" onclick="publish()">🚀 Опубликовать на сайт</button>
+    <button class="btn btn-ghost" id="tokenBtn" onclick="openTokenDialog()" title="Ключ доступа GitHub">🔑</button>
+    <button class="btn btn-ghost" onclick="logout()">Выйти</button>
+  </div>
+  <div class="main">
+    <div class="editor" id="editor">
+      <div class="hint">
+        Меняйте любой текст и фото. Нажмите <b>Сохранить</b> — и справа сразу видно, как это выглядит на сайте.
+        Когда всё готово — нажмите <b>🚀 Опубликовать на сайт</b>, и через ~минуту правки появятся на живом сайте. <br>
+        <b>Заявки на бронь</b> приходят в WhatsApp — их менять здесь не нужно.
+      </div>
+      <!-- поля генерируются JS -->
+    </div>
+    <div class="previewwrap">
+      <div class="previewbar">
+        <button class="btn btn-ghost" style="background:#fff" onclick="reloadPreview()">⟳ Обновить превью</button>
+      </div>
+      <iframe id="preview" src="index.html"></iframe>
+    </div>
+  </div>
+</div>
+
+<!-- ОКНО КЛЮЧА ДОСТУПА GitHub -->
+<div class="modal" id="tokenModal">
+  <div class="box">
+    <h3>Ключ доступа для публикации</h3>
+    <p>Чтобы правки уходили на живой сайт, нужен персональный ключ GitHub. Вводится один раз и хранится <b>только в этом браузере</b> — на другом компьютере или в другом браузере его нужно будет ввести заново. У ключа есть срок действия (вы задаёте его при создании) — когда он истечёт, нужно будет создать новый и вставить сюда.</p>
+    <ol>
+      <li>Откройте <a href="https://github.com/settings/personal-access-tokens/new" target="_blank">создание токена</a> (Fine-grained).</li>
+      <li>Repository access → Only select repositories → <b>baataraiurgoo-site</b>.</li>
+      <li>Permissions → Contents → <b>Read and write</b>.</li>
+      <li>Generate token, скопируйте и вставьте сюда:</li>
+    </ol>
+    <input type="password" id="tokenInput" placeholder="github_pat_..." />
+    <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:4px">
+      <button class="btn btn-ghost" id="checkTokenBtn" onclick="checkToken()" style="font-size:13px">🔍 Проверить ключ</button>
+    </div>
+    <div id="tokenCheckResult" style="font-size:12.5px;line-height:1.5;margin:8px 0 12px;min-height:18px"></div>
+    <div class="row">
+      <button class="btn btn-ghost" onclick="closeTokenDialog()">Закрыть</button>
+      <button class="btn btn-primary" onclick="saveToken()">Сохранить ключ</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ================= ПАРОЛЬ (демо-защита; настоящий вход подключим при публикации) ============== */
+var ADMIN_PASS = "baatarai2026";
+
+/* ================= данные ================= */
+function deepClone(o){ return JSON.parse(JSON.stringify(o)); }
+var DEFAULTS = deepClone(window.__CONTENT || {});
+delete DEFAULTS._meta;
+var work = loadWork();
+
+function loadWork(){
+  try{ var s=localStorage.getItem('baatarai_content'); if(s){ return mergeDefaults(deepClone(DEFAULTS), JSON.parse(s)); } }catch(e){}
+  return deepClone(DEFAULTS);
+}
+function mergeDefaults(base, over){ // поверх дефолтов кладём сохранённые правки
+  for(var k in over){ if(over[k]&&typeof over[k]==='object'&&!Array.isArray(over[k])&&base[k]) mergeDefaults(base[k],over[k]); else base[k]=over[k]; }
+  return base;
+}
+
+/* ================= словари подписей ================= */
+var SEC_TITLES = {
+  settings:'⚙️ Настройки (телефон, депозит, почта)', nav:'Шапка и меню', hero:'Главный экран',
+  format:'Три условия', about:'01 · О месте', owner:'02 · Хозяйка', events:'03 · События',
+  halls:'04 · Залы', menu:'05 · Меню и цены', hotel:'06 · Отель «Ноён»', gallery:'07 · Галерея',
+  reviews:'08 · Отзывы (TripAdvisor)', booking:'09 · Бронирование', contacts:'10 · Контакты', footer:'Подвал'
+};
+var SEC_ORDER = ['settings','nav','hero','format','about','owner','events','halls','menu','hotel','gallery','reviews','booking','contacts','footer'];
+var LABELS = {
+  eyebrow:'Надзаголовок', eyebrow_num:'Номер-метка', video:'Видео — ссылка-embed (VK/RuTube/YouTube)', title:'Заголовок', title_accent:'Заголовок (выделенное)',
+  lead:'Подзаголовок', tag:'Метка', h:'Название', p:'Описание', img:'Фото', image:'Фото', cap:'Подпись',
+  price:'Цена (только число)', price_note:'Подпись к цене', cat:'Категория (в QR-меню)', quote:'Цитата', badge:'Плашка на фото',
+  cta:'Кнопка', cta_primary:'Кнопка (главная)', cta_ghost:'Кнопка (вторая)', cta_text:'Текст над кнопкой',
+  cta_button:'Кнопка', note:'Примечание', about:'Текст', copyright:'Копирайт', address:'Адрес',
+  pages_title:'Заголовок «Полное меню»', pages_lead:'Подзаголовок полного меню',
+  phone1:'Телефон 1', phone2:'Телефон 2', hours:'Часы работы', email:'Почта', vk:'Ссылка ВК', vk_label:'ВК (подпись)',
+  wa_phone:'WhatsApp (цифры, без +)', max_link:'Ссылка на профиль Max', deposit_value:'Депозит, ₽', deposit_type:'Тип депозита',
+  p1:'Абзац 1', p2:'Абзац 2', p3:'Абзац 3', full_menu_button:'Кнопка «полное меню»',
+  deposit_amount_label:'Сумма депозита (текст)', deposit_desc:'Описание депозита',
+  contact_title:'Заголовок формы «Написать»', contact_sub:'Подзаголовок формы', map_query:'Адрес для карты',
+  brand:'Название', brand_sub:'Подпись под названием', chips:'Теги (по одному на строку)',
+  ta_rating:'Оценка TripAdvisor (напр. 4.6)', ta_count:'Кол-во отзывов', ta_url:'Ссылка на TripAdvisor',
+  name:'Имя гостя', city:'Город', date:'Дата (напр. окт. 2018)', stars:'Звёзды (1–5)', text:'Текст отзыва'
+};
+function labelFor(k){ return LABELS[k] || k; }
+function isImg(k){ return k==='image'||k==='img'||/^photo\d/.test(k); }
+function isTextarea(k,v){ return ['p1','p2','p3','p','lead','note','about','quote','cta_text','tag','desc','text'].indexOf(k)>-1 || (typeof v==='string'&&v.length>55); }
+
+/* ================= рендер редактора ================= */
+function el(html){ var d=document.createElement('div'); d.innerHTML=html.trim(); return d.firstChild; }
+function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function renderEditor(){
+  var ed = document.getElementById('editor');
+  var openSecs = {};
+  Array.prototype.slice.call(ed.querySelectorAll('details.sec')).forEach(function(d){ if(d.open) openSecs[d.getAttribute('data-sec')]=1; });
+  var anyOpen = Object.keys(openSecs).length>0;
+  Array.prototype.slice.call(ed.querySelectorAll('.sec')).forEach(function(n){n.remove();});
+  SEC_ORDER.forEach(function(sk){
+    if(!(sk in work)) return;
+    var isOpen = openSecs[sk] || (!anyOpen && sk==='hero');
+    var det = el('<details class="sec" data-sec="'+sk+'"'+(isOpen?' open':'')+'><summary>'+esc(SEC_TITLES[sk]||sk)+'<span class="tw">▸</span></summary><div class="body"></div></details>');
+    var body = det.querySelector('.body');
+    renderObj(body, work[sk], sk);
+    ed.appendChild(det);
+  });
+}
+function renderObj(container, obj, path){
+  Object.keys(obj).forEach(function(k){
+    var v = obj[k], p = path+'.'+k;
+    if(Array.isArray(v)){
+      if(v.length && typeof v[0]==='object'){ // массив карточек — с добавлением/удалением
+        v.forEach(function(it, i){
+          var wrap = el('<div class="item"></div>');
+          var head = el('<div class="itemhead"><span>'+esc(itemName(k,i,it))+'</span></div>');
+          var del = el('<button class="btn btn-ghost itembtn">✕ Удалить</button>');
+          del.addEventListener('click', function(){ if(confirm('Удалить «'+itemName(k,i,it)+'»?')){ v.splice(i,1); markDirty(); renderEditor(); } });
+          head.appendChild(del);
+          wrap.appendChild(head);
+          renderObj(wrap, it, p+'.'+i);
+          container.appendChild(wrap);
+        });
+        var add = el('<button class="btn btn-primary additem">+ Добавить '+addWord(k)+'</button>');
+        add.addEventListener('click', function(){ v.push(addTemplate(k)); markDirty(); renderEditor(); });
+        container.appendChild(add);
+      } else { // массив строк
+        container.appendChild(field(p, labelFor(k), v.join('\n'), true, false, true));
+      }
+    } else if(v && typeof v==='object'){
+      renderObj(container, v, p);
+    } else if(isImg(k)){
+      container.appendChild(imgField(p, v));
+    } else {
+      container.appendChild(field(p, labelFor(k), v, isTextarea(k,v), false, false));
+    }
+  });
+}
+function addWord(k){ return {cards:'карточку',dishes:'блюдо',rooms:'номер',photos:'фото/видео',pages:'страницу меню',items:'отзыв'}[k]||'элемент'; }
+function addTemplate(k){
+  if(k==='pages') return {img:'',cap:''};
+  if(k==='photos') return {img:'',video:'',cap:''};
+  if(k==='dishes') return {img:'',tag:'',h:'Новое блюдо',p:'',price:'',price_note:'цена уточняется',cat:'Горячее'};
+  if(k==='rooms') return {img:'',tag:'',h:'Новый номер',p:''};
+  if(k==='cards') return {img:'',h:'Новая карточка',p:''};
+  if(k==='items') return {name:'',city:'',date:'',stars:5,title:'',text:''};
+  return {};
+}
+function itemName(k,i,it){
+  var base = {cards:'Карточка',dishes:'Блюдо',rooms:'Номер',pages:'Страница',items:'Отзыв',photos:(it&&it.video?'Видео':'Фото')}[k] || 'Элемент';
+  return base+' '+(i+1)+(it.h?(' — '+it.h):(it.name?(' — '+it.name):''));
+}
+function field(path, label, val, textarea, _u, isList){
+  var f = el('<div class="fld"></div>');
+  f.appendChild(el('<label>'+esc(label)+'</label>'));
+  var inp = textarea ? el('<textarea></textarea>') : el('<input type="text" />');
+  inp.value = val==null?'':val;
+  inp.addEventListener('input', function(){ setPath(path, isList ? inp.value.split('\n').map(function(s){return s.trim();}).filter(Boolean) : inp.value); markDirty(); });
+  f.appendChild(inp);
+  return f;
+}
+function imgField(path, val){
+  var f = el('<div class="fld"></div>');
+  f.appendChild(el('<label>Фото</label>'));
+  var row = el('<div class="imgfld"></div>');
+  var thumb = el('<img class="thumb" />'); thumb.src = val||'';
+  var grow = el('<div class="grow"></div>');
+  var inp = el('<input type="text" placeholder="ссылка на фото или загрузите файл" />'); inp.value = val||'';
+  inp.addEventListener('input', function(){ setPath(path, inp.value); thumb.src=inp.value; markDirty(); });
+  var up = el('<button class="btn btn-ghost up">Загрузить</button>');
+  var file = el('<input type="file" accept="image/*" style="display:none" />');
+  up.addEventListener('click', function(){ file.click(); });
+  file.addEventListener('change', function(){
+    var fl=file.files[0]; if(!fl) return;
+    showToast('Обрабатываю фото…');
+    resizeImage(fl, 1600, 0.85, function(dataUrl){
+      thumb.src = dataUrl; // мгновенное превью
+      if (ghToken()) {
+        uploadPhotoToRepo(dataUrl).then(function(repoPath){
+          if (repoPath) { inp.value=repoPath; setPath(path, repoPath); markDirty(); showToast('Фото загружено. Не забудьте «Опубликовать»'); }
+          else { inp.value=dataUrl; setPath(path, dataUrl); markDirty(); showToast('Не удалось залить в репозиторий — фото добавлено локально'); }
+        });
+      } else {
+        inp.value=dataUrl; setPath(path, dataUrl); markDirty();
+        showToast('Фото добавлено локально. Для публикации задайте ключ 🔑');
+      }
+    });
+  });
+  grow.appendChild(inp);
+  row.appendChild(thumb); row.appendChild(grow); row.appendChild(up); row.appendChild(file);
+  f.appendChild(row);
+  return f;
+}
+
+/* ================= путь -> значение ================= */
+function setPath(path, val){
+  var parts=path.split('.'), o=work;
+  for(var i=0;i<parts.length-1;i++){ o=o[parts[i]]; }
+  o[parts[parts.length-1]] = val;
+}
+
+/* ================= сохранение / состояние ================= */
+var dirty=false;
+function markDirty(){ dirty=true; document.getElementById('saveState').textContent='● есть несохранённые правки'; }
+function saveAll(){
+  try{ localStorage.setItem('baatarai_content', JSON.stringify(work)); }catch(e){ alert('Не удалось сохранить: '+e.message); return; }
+  dirty=false; document.getElementById('saveState').textContent='✓ сохранено';
+  reloadPreview(); showToast('Сохранено — смотрите справа');
+}
+function reloadPreview(){ var f=document.getElementById('preview'); f.contentWindow.location.reload(); }
+function downloadContent(){
+  var js = 'window.__CONTENT = '+JSON.stringify(mergeForExport(),null,2)+';\n';
+  var b=new Blob([js],{type:'text/javascript'}); var u=URL.createObjectURL(b);
+  var a=document.createElement('a'); a.href=u; a.download='content.js'; a.click(); setTimeout(function(){URL.revokeObjectURL(u);},800);
+  showToast('Файл content.js скачан');
+}
+function mergeForExport(){ var full=deepClone(window.__CONTENT||{}); for(var k in work) full[k]=work[k]; return full; }
+
+/* ================= публикация на живой сайт (GitHub) ================= */
+var GH = { owner:'rednaxelavoroge', repo:'baataraiurgoo-site', path:'content.js', branch:'main' };
+function ghToken(){ return localStorage.getItem('baatarai_gh_token')||''; }
+
+/* понятные сообщения об ошибках GitHub API */
+function ghErrorMessage(status, body){
+  if(status===401) return '❌ Ключ недействителен — неверный или отозванный токен. Откройте 🔑 и создайте новый.';
+  if(status===403) return '❌ Доступ запрещён — у ключа нет прав на запись. Откройте 🔑, нажмите «Проверить ключ» и убедитесь, что при создании токена выбрано Contents: Read and write.';
+  if(status===404) return '❌ У ключа нет доступа к репозиторию baataraiurgoo-site. Проверьте Repository access при создании токена (должен быть выбран именно этот репозиторий).';
+  if(status===422) return '❌ GitHub отклонил запрос (422)'+(body&&body.message?': '+body.message:'.');
+  return '❌ Ошибка публикации ('+status+')'+(body&&body.message?': '+body.message:'.');
+}
+
+/* индикатор наличия ключа на кнопке 🔑 */
+function refreshTokenBtn(){
+  var b = document.getElementById('tokenBtn');
+  if(!b) return;
+  if(ghToken()){ b.textContent='🔑 ✓'; b.title='Ключ доступа GitHub сохранён в этом браузере'; }
+  else { b.textContent='🔑'; b.title='Ключ доступа GitHub не задан'; }
+}
+
+/* тестовый запрос к GitHub API — проверяет валидность ключа и права записи */
+async function checkToken(){
+  var input = document.getElementById('tokenInput');
+  var token = (input.value||'').trim();
+  var out = document.getElementById('tokenCheckResult');
+  var btn = document.getElementById('checkTokenBtn');
+  if(!token){ out.innerHTML='<span style="color:#c0392b">Сначала вставьте ключ в поле выше.</span>'; return; }
+  out.textContent='Проверяю…';
+  if(btn) btn.disabled=true;
+  try{
+    var res = await fetch('https://api.github.com/repos/'+GH.owner+'/'+GH.repo, {
+      headers:{'Authorization':'token '+token,'Accept':'application/vnd.github+json'}, cache:'no-store'
+    });
+    if(res.status===200){
+      var data = await res.json();
+      var canWrite = !!(data.permissions && data.permissions.push);
+      var exp = res.headers.get('github-authentication-token-expiration');
+      var msg = canWrite
+        ? '✅ Ключ работает, есть право на запись — публикация будет работать.'
+        : '⚠️ Ключ действителен, но БЕЗ права записи — публикация не сработает. Проверьте, что выбрано Contents: Read and write.';
+      if(exp) msg += ' Истекает: '+exp+'.';
+      out.innerHTML = '<span style="color:'+(canWrite?'#1f9d55':'#b5502e')+'">'+msg+'</span>';
+    } else if(res.status===401){
+      out.innerHTML = '<span style="color:#c0392b">❌ Ключ недействителен — неверный или отозванный токен.</span>';
+    } else if(res.status===404 || res.status===403){
+      out.innerHTML = '<span style="color:#c0392b">❌ У этого ключа нет доступа к репозиторию baataraiurgoo-site. Проверьте Repository access при создании токена.</span>';
+    } else {
+      out.innerHTML = '<span style="color:#c0392b">❌ Ошибка проверки: '+res.status+'</span>';
+    }
+  }catch(e){
+    out.innerHTML = '<span style="color:#c0392b">❌ Не удалось связаться с GitHub: '+e.message+'</span>';
+  } finally {
+    if(btn) btn.disabled=false;
+  }
+}
+
+/* сжатие фото (по большей стороне до maxDim) → jpeg dataURL */
+function resizeImage(fileObj, maxDim, quality, cb){
+  var r=new FileReader();
+  r.onload=function(){
+    var img=new Image();
+    img.onload=function(){
+      var w=img.width, h=img.height, scale=Math.min(1, maxDim/Math.max(w,h));
+      var cw=Math.max(1,Math.round(w*scale)), ch=Math.max(1,Math.round(h*scale));
+      var c=document.createElement('canvas'); c.width=cw; c.height=ch;
+      c.getContext('2d').drawImage(img,0,0,cw,ch);
+      try { cb(c.toDataURL('image/jpeg', quality)); } catch(e){ cb(r.result); }
+    };
+    img.onerror=function(){ cb(r.result); };
+    img.src=r.result;
+  };
+  r.readAsDataURL(fileObj);
+}
+/* загрузка фото файлом в репозиторий → возвращает относительный путь images/... */
+async function uploadPhotoToRepo(dataUrl){
+  var token=ghToken(); if(!token) return null;
+  var b64=(dataUrl.split(',')[1])||'';
+  var repoPath='images/img-'+Date.now()+'.jpg';
+  var url='https://api.github.com/repos/'+GH.owner+'/'+GH.repo+'/contents/'+repoPath;
+  try{
+    var res=await fetch(url,{method:'PUT',headers:{'Authorization':'token '+token,'Accept':'application/vnd.github+json','Content-Type':'application/json'},
+      body:JSON.stringify({message:'Загрузка фото через админку: '+repoPath, content:b64, branch:GH.branch})});
+    return res.ok ? repoPath : null;
+  }catch(e){ return null; }
+}
+function openTokenDialog(){
+  document.getElementById('tokenInput').value=ghToken();
+  document.getElementById('tokenCheckResult').textContent='';
+  document.getElementById('tokenModal').classList.add('on');
+  if(ghToken()) checkToken();
+}
+function closeTokenDialog(){ document.getElementById('tokenModal').classList.remove('on'); }
+function saveToken(){
+  var t=document.getElementById('tokenInput').value.trim();
+  if(!t){ closeTokenDialog(); return; }
+  localStorage.setItem('baatarai_gh_token',t);
+  refreshTokenBtn();
+  showToast('Ключ сохранён');
+  checkToken();
+}
+async function publish(){
+  var token=ghToken();
+  if(!token){ openTokenDialog(); return; }
+  saveAll();
+  var js='window.__CONTENT = '+JSON.stringify(mergeForExport(),null,2)+';\n';
+  var b64=btoa(unescape(encodeURIComponent(js)));
+  var base='https://api.github.com/repos/'+GH.owner+'/'+GH.repo+'/contents/'+GH.path;
+  var hdr={'Authorization':'token '+token,'Accept':'application/vnd.github+json','Content-Type':'application/json'};
+  document.getElementById('saveState').textContent='публикую…';
+  try{
+    var sha=null;
+    var g=await fetch(base+'?ref='+GH.branch,{headers:hdr,cache:'no-store'});
+    if(g.status===200){ sha=(await g.json()).sha; }
+    else if(g.status===401||g.status===403||g.status===404){ alert(ghErrorMessage(g.status)); document.getElementById('saveState').textContent=''; return; }
+    var put=await fetch(base,{method:'PUT',headers:hdr,body:JSON.stringify({message:'Обновление контента через админку',content:b64,sha:sha,branch:GH.branch})});
+    if(put.ok){ document.getElementById('saveState').textContent='✓ опубликовано'; showToast('✓ Опубликовано! Сайт обновится за ~1 минуту'); }
+    else { var e=null; try{ e=await put.json(); }catch(_){} document.getElementById('saveState').textContent=''; alert(ghErrorMessage(put.status, e)); }
+  }catch(err){ document.getElementById('saveState').textContent=''; alert('Не удалось связаться с GitHub: '+err.message); }
+}
+
+function showToast(t){ var el=document.getElementById('toast'); el.textContent=t; el.classList.add('on'); clearTimeout(el._t); el._t=setTimeout(function(){el.classList.remove('on');},1800); }
+
+/* ================= вход ================= */
+function tryLogin(){
+  var v=document.getElementById('pass').value;
+  if(v===ADMIN_PASS){ sessionStorage.setItem('baatarai_admin','1'); showApp(); }
+  else{ document.getElementById('loginErr').textContent='Неверный пароль'; }
+}
+function logout(){ sessionStorage.removeItem('baatarai_admin'); location.reload(); }
+function showApp(){
+  document.getElementById('login').style.display='none'; document.getElementById('app').classList.add('on');
+  refreshTokenBtn();
+  // подтягиваем свежий опубликованный контент (мимо кэша) как основу
+  fetch('content.js?ts='+Date.now(),{cache:'no-store'}).then(function(r){return r.text();}).then(function(t){
+    try{(0,eval)(t);}catch(e){}
+    DEFAULTS=deepClone(window.__CONTENT||{}); delete DEFAULTS._meta; work=loadWork();
+    renderEditor();
+  }).catch(function(){ renderEditor(); });
+}
+document.getElementById('pass').addEventListener('keydown',function(e){ if(e.key==='Enter') tryLogin(); });
+window.addEventListener('beforeunload',function(e){ if(dirty){ e.preventDefault(); e.returnValue=''; } });
+
+if(sessionStorage.getItem('baatarai_admin')==='1'){ showApp(); }
+else{ document.getElementById('pass').focus(); }
+</script>
+</body>
+</html>

@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Баатарай Ургоо — бурятская кухня по записи · банкеты в бурятском этностиле</title>
+<meta name="description" content="Этнокомплекс «Баатарай Ургоо» в Улан-Удэ: камерный формат бурятской кухни по предварительной записи. Банкеты, свадьбы, миланы и юбилеи в бурятском этностиле. Кафе-юрта, банкетный зал до 100 персон, мини-отель «Ноён»." />
+
+<!-- Open Graph / превью ссылки в мессенджерах и соцсетях -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Баатарай Ургоо" />
+<meta property="og:title" content="Баатарай Ургоо — бурятская кухня по записи · банкеты в бурятском этностиле" />
+<meta property="og:description" content="Этнокомплекс в Улан-Удэ: камерный формат бурятской кухни по записи. Банкеты, свадьбы, миланы в бурятском этностиле. Кафе-юрта, банкетный зал до 100 персон, мини-отель «Ноён»." />
+<!-- превью ссылки: реальное фото с CDN (существует точно) -->
+<meta property="og:image" content="images/tild6437-6135-4232-b561-346165626163_baatar_big6.jpg" />
+<meta property="og:url" content="https://baataraiurgoo.netlify.app/" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Баатарай Ургоо — бурятская кухня по записи" />
+<meta name="twitter:description" content="Камерный формат, банкеты и события в бурятском этностиле. Улан-Удэ." />
+<meta name="twitter:image" content="images/tild6437-6135-4232-b561-346165626163_baatar_big6.jpg" />
+
+<!-- ============================================================
+     РЕДИЗАЙН ПОД ОПЕРАЦИОННУЮ СТРАТЕГИЮ (см. baatarai_urgoo_strategy.pdf):
+     • камерный формат «по записи», не широкий поток
+     • бронь + ПРЕДЗАКАЗ блюд → WhatsApp с готовым составом + предоплата
+     • предоплата настраивается в админке: фикс ₽ или % от стола
+     • бурятское гостеприимство и традиции как якорь (без указания на личность хозяйки по её просьбе)
+     • ставка на события: банкеты, свадьбы, миланы, юбилеи
+     Один файл, всё инлайн. Деплой: Netlify Drop / Vercel. Детали — README.md
+============================================================ -->
+
+<link href="css/fonts.css" rel="stylesheet" />
+
+<style>
+  :root{
+    --bg:#100c08;
+    --bg-soft:#181208;
+    --card:#211a11;
+    --cream:#f5eee1;
+    --muted:#b3a489;
+    --rust:#bb5a28;
+    --rust-2:#dd8044;
+    --gold:#d4ad62;
+    --gold-soft:#ecd49d;
+    --blue:#2f6f7a;            /* köke — сакральный синий, акцент */
+    --line:rgba(212,173,98,.20);
+    --line-strong:rgba(212,173,98,.42);
+    --radius:16px;
+    --maxw:1200px;
+    --shadow:0 34px 80px -34px rgba(0,0,0,.85);
+    --serif:'Cormorant Garamond',Georgia,serif;
+    --sans:'Manrope',system-ui,-apple-system,Segoe UI,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--sans);background:var(--bg);color:var(--cream);line-height:1.65;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  img{display:block;max-width:100%}
+  section{padding:112px 24px;position:relative}
+  .wrap{max-width:var(--maxw);margin:0 auto}
+  h1,h2,h3,h4{font-family:var(--serif);font-weight:600;line-height:1.08;letter-spacing:.2px}
+
+  .eyebrow{display:inline-flex;align-items:center;gap:14px;font-size:12px;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);font-weight:600;margin-bottom:20px}
+  .eyebrow::before{content:"";width:30px;height:11px;background:
+    repeating-linear-gradient(90deg,var(--gold) 0 3px,transparent 3px 6px);
+    -webkit-mask:linear-gradient(90deg,#000,#000);opacity:.75}
+  .eyebrow .num{font-family:var(--serif);font-size:15px;letter-spacing:0;color:var(--rust-2)}
+  .section-title{font-size:clamp(33px,5vw,58px);margin-bottom:20px}
+  .lead{color:var(--muted);font-size:18px;max-width:700px}
+
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:16px 32px;border-radius:999px;font-weight:600;font-size:15px;cursor:pointer;border:1px solid transparent;transition:.28s;white-space:nowrap}
+  .btn-primary{background:linear-gradient(135deg,var(--rust),var(--rust-2));color:#fff;box-shadow:0 16px 34px -14px rgba(187,90,40,.85)}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 24px 46px -14px rgba(187,90,40,1)}
+  .btn-ghost{border-color:var(--line-strong);color:var(--cream)}
+  .btn-ghost:hover{background:rgba(212,173,98,.1);border-color:var(--gold)}
+  .btn-wa{background:#1faa55;color:#fff}
+  .btn-wa:hover{background:#27c163;transform:translateY(-2px)}
+  .btn-gold{background:var(--gold);color:#15100a}
+  .btn-gold:hover{background:var(--gold-soft);transform:translateY(-2px)}
+
+  /* меандр «алхан хээ» — орнаментальная лента */
+  .meander{height:18px;background-size:auto 18px;background-repeat:repeat-x;opacity:.5;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='42' height='18' viewBox='0 0 42 18'><path d='M0 14 H8 V6 H22 V14 H30 V2 H42' fill='none' stroke='%23d4ad62' stroke-width='1.4'/></svg>")}
+
+  .ornament{display:flex;align-items:center;justify-content:center;gap:18px;color:var(--gold);opacity:.6;margin:0 auto}
+  .ornament::before,.ornament::after{content:"";height:1px;width:84px;background:linear-gradient(90deg,transparent,var(--gold))}
+  .ornament::after{background:linear-gradient(90deg,var(--gold),transparent)}
+  .ornament .knot{width:38px;height:38px;flex:0 0 auto}
+
+  /* ---------- NAV ---------- */
+  header.nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:20px 32px;transition:.35s}
+  header.nav.scrolled{background:rgba(16,12,8,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding:13px 32px}
+  .brand{display:flex;align-items:center;gap:13px;font-family:var(--serif);font-size:23px;font-weight:700;letter-spacing:.5px}
+  .brand .mark{width:44px;height:44px;border-radius:50%;flex:0 0 auto;background:radial-gradient(circle at 32% 30%,var(--gold),var(--rust));display:grid;place-items:center;color:#15100a}
+  .brand .mark svg{width:26px;height:26px}
+  .brand small{display:block;font-family:var(--sans);font-size:9.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-top:2px}
+  nav.links{display:flex;gap:26px;align-items:center}
+  nav.links a{font-size:14.5px;color:var(--muted);transition:.2s}
+  nav.links a:hover{color:var(--gold)}
+  .nav-cta{padding:11px 22px;font-size:14px}
+  .burger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px}
+  .burger span{width:24px;height:2px;background:var(--cream);transition:.3s}
+
+  /* ---------- HERO ---------- */
+  .hero{position:relative;min-height:100vh;display:flex;align-items:center;padding:140px 24px 96px;overflow:hidden}
+  .hero-bg{position:absolute;inset:0;z-index:0}
+  .hero-bg img{width:100%;height:100%;object-fit:cover;object-position:center 30%;transform:scale(1.05)}
+  .hero-bg::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(16,12,8,.46) 0%,rgba(16,12,8,.7) 52%,var(--bg) 100%)}
+  .hero-inner{position:relative;z-index:1;max-width:var(--maxw);margin:0 auto;width:100%}
+  .hero h1{font-size:clamp(48px,8.5vw,118px);margin:16px 0 22px;text-shadow:0 6px 44px rgba(0,0,0,.6)}
+  .hero h1 .accent{color:var(--gold);font-style:italic}
+  .hero p.tag{font-size:clamp(17px,2.4vw,22px);color:#efe3cc;max-width:660px;margin-bottom:18px}
+  .hero .artist{display:inline-flex;align-items:center;gap:10px;font-size:14px;color:var(--gold-soft);margin-bottom:34px;border:1px solid var(--line-strong);border-radius:999px;padding:8px 18px;background:rgba(16,12,8,.4)}
+  .hero .artist b{font-weight:600;color:var(--cream)}
+  .hero .actions{display:flex;gap:16px;flex-wrap:wrap}
+  .hero .facts{display:flex;gap:42px;flex-wrap:wrap;margin-top:58px;padding-top:32px;border-top:1px solid var(--line)}
+  .fact b{font-family:var(--serif);font-size:38px;color:var(--gold);display:block;line-height:1}
+  .fact span{font-size:12.5px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase}
+
+  /* ---------- FORMAT STRIP ---------- */
+  .format{background:var(--bg-soft);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .format .wrap{display:grid;grid-template-columns:repeat(3,1fr);gap:30px}
+  .format .it{display:flex;gap:16px;align-items:flex-start}
+  .format .it .ic{width:48px;height:48px;flex:0 0 auto;border-radius:12px;border:1px solid var(--line);display:grid;place-items:center;color:var(--gold)}
+  .format .it h4{font-size:21px;margin-bottom:4px}
+  .format .it p{font-size:13.5px;color:var(--muted)}
+
+  /* ---------- ABOUT / OWNER ---------- */
+  .about-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:64px;align-items:center}
+  .about-text p{color:var(--muted);margin-top:18px}
+  .about-photos{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .about-photos figure{overflow:hidden;border-radius:var(--radius);border:1px solid var(--line)}
+  .about-photos img{width:100%;height:100%;object-fit:cover;aspect-ratio:3/4;transition:.7s}
+  .about-photos figure:nth-child(1){grid-row:span 2}
+  .about-photos figure:hover img{transform:scale(1.07)}
+  .chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:30px}
+  .chip{border:1px solid var(--line);border-radius:999px;padding:9px 17px;font-size:13px;color:var(--cream);background:rgba(212,173,98,.05)}
+
+  .owner{background:var(--bg-soft)}
+  .owner-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:56px;align-items:center}
+  .owner-photo{position:relative;border-radius:var(--radius);overflow:hidden;border:1px solid var(--line-strong);aspect-ratio:4/5}
+  .owner-photo img{width:100%;height:100%;object-fit:cover}
+  .owner-photo .badge{position:absolute;left:18px;bottom:18px;background:rgba(16,12,8,.78);border:1px solid var(--line-strong);border-radius:999px;padding:8px 16px;font-size:12.5px;color:var(--gold-soft);backdrop-filter:blur(4px)}
+  .owner-text blockquote{font-family:var(--serif);font-style:italic;font-size:clamp(22px,2.6vw,30px);line-height:1.32;color:var(--cream);margin:18px 0}
+  .owner-text p{color:var(--muted);margin-top:14px}
+
+  /* ---------- EVENTS ---------- */
+  .events-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:22px;margin-top:46px}
+  .event{position:relative;border-radius:var(--radius);overflow:hidden;border:1px solid var(--line);aspect-ratio:4/5;display:flex;align-items:flex-end}
+  .event img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:.7s}
+  .event::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(10,7,4,.92) 0%,rgba(10,7,4,.12) 58%,transparent)}
+  .event:hover img{transform:scale(1.08)}
+  .event .cap{position:relative;z-index:1;padding:24px}
+  .event .cap h3{font-size:24px;margin-bottom:5px}
+  .event .cap p{font-size:13px;color:var(--gold-soft)}
+  .events-cta{margin-top:40px;display:flex;gap:16px;flex-wrap:wrap;align-items:center;justify-content:center;text-align:center;flex-direction:column}
+  .events-cta p{color:var(--muted);max-width:560px}
+
+  /* ---------- HALLS ---------- */
+  .halls{background:var(--bg-soft)}
+  .halls-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:22px;margin-top:50px}
+  .hall{position:relative;border-radius:var(--radius);overflow:hidden;border:1px solid var(--line);aspect-ratio:4/5;display:flex;align-items:flex-end}
+  .hall img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:.7s}
+  .hall::after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(10,7,4,.9) 0%,rgba(10,7,4,.1) 55%,transparent)}
+  .hall:hover img{transform:scale(1.08)}
+  .hall .cap{position:relative;z-index:1;padding:24px}
+  .hall .cap h3{font-size:25px;margin-bottom:6px}
+  .hall .cap p{font-size:13.5px;color:var(--gold-soft)}
+
+  /* ---------- MENU ---------- */
+  .menu-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:22px;margin-top:46px}
+  .dish{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column;transition:.3s}
+  .dish:hover{transform:translateY(-6px);box-shadow:var(--shadow);border-color:var(--line-strong)}
+  .dish .ph{aspect-ratio:1;overflow:hidden;background:#2c241b}
+  .dish .ph img{width:100%;height:100%;object-fit:cover;transition:.7s}
+  .dish:hover .ph img{transform:scale(1.07)}
+  .dish .body{padding:20px;display:flex;flex-direction:column;gap:8px;flex:1}
+  .dish h3{font-size:23px}
+  .dish .tagline{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--rust-2);font-weight:600}
+  .dish p{color:var(--muted);font-size:14px;flex:1}
+  .dish .price{display:flex;align-items:center;justify-content:space-between;margin-top:6px;border-top:1px dashed var(--line);padding-top:12px}
+  .dish .price b{font-family:var(--serif);font-size:21px;color:var(--gold)}
+  .dish .price small{font-size:11.5px;color:var(--muted)}
+  .menu-note{margin-top:34px;font-size:14px;color:var(--muted);text-align:center;max-width:680px;margin-left:auto;margin-right:auto}
+
+  /* ---------- HOTEL ---------- */
+  .hotel{background:var(--bg-soft)}
+  .rooms-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:22px;margin-top:50px}
+  @media(min-width:1000px){.rooms-grid{grid-template-columns:repeat(3,1fr)}}
+  .room{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;transition:.3s}
+  .room:hover{transform:translateY(-5px);box-shadow:var(--shadow);border-color:var(--line-strong)}
+  .room .ph{aspect-ratio:3/2;overflow:hidden}
+  .room .ph img{width:100%;height:100%;object-fit:cover;transition:.7s}
+  .room:hover .ph img{transform:scale(1.06)}
+  .room .body{padding:20px 22px}
+  .room .body .tag{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--rust-2);font-weight:600}
+  .room .body h3{font-size:22px;margin:4px 0 8px}
+  .room .body p{font-size:13.5px;color:var(--muted)}
+
+  /* ---------- GALLERY ---------- */
+  .gallery-grid{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:210px;gap:14px;margin-top:50px}
+  .gallery-grid figure{overflow:hidden;border-radius:14px;border:1px solid var(--line);position:relative}
+  .gallery-grid img{width:100%;height:100%;object-fit:cover;transition:.7s}
+  .gallery-grid figure:hover img{transform:scale(1.08)}
+  .gallery-grid figcaption{position:absolute;left:0;right:0;bottom:0;padding:14px;font-size:12.5px;background:linear-gradient(0deg,rgba(0,0,0,.78),transparent);opacity:0;transition:.3s}
+  .gallery-grid figure:hover figcaption{opacity:1}
+  .g-wide{grid-column:span 2}
+  .g-tall{grid-row:span 2}
+
+  /* ---------- BOOKING ---------- */
+  .booking{background:var(--bg-soft)}
+  .booking-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:50px;align-items:start}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:36px}
+  .panel h3{font-size:27px;margin-bottom:6px}
+  .panel .sub{color:var(--muted);font-size:14px;margin-bottom:24px}
+  .field{margin-bottom:16px}
+  .field label{display:block;font-size:13px;color:var(--muted);margin-bottom:7px}
+  .field input,.field select,.field textarea{width:100%;padding:13px 15px;border-radius:12px;border:1px solid var(--line);background:#140f07;color:var(--cream);font-family:inherit;font-size:15px;transition:.2s}
+  .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--gold);background:#1a1309}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .field textarea{resize:vertical;min-height:74px}
+  .steps{display:flex;gap:8px;margin-bottom:22px}
+  .step-dot{flex:1;height:4px;border-radius:4px;background:var(--line)}
+  .step-dot.active{background:linear-gradient(90deg,var(--rust),var(--gold))}
+  .step{display:none}
+  .step.active{display:block;animation:fade .4s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  /* предзаказ блюд */
+  .preorder{border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:8px}
+  .preorder .po-item{display:flex;align-items:center;gap:12px;padding:11px 14px;border-bottom:1px solid var(--line)}
+  .preorder .po-item:last-child{border-bottom:0}
+  .preorder .po-name{flex:1;font-size:14px}
+  .preorder .po-name small{display:block;color:var(--muted);font-size:11.5px}
+  .stepper{display:flex;align-items:center;gap:0;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+  .stepper button{width:30px;height:30px;background:#140f07;color:var(--cream);border:0;font-size:16px;cursor:pointer}
+  .stepper button:hover{background:rgba(212,173,98,.14)}
+  .stepper .qty{width:34px;text-align:center;font-size:14px;font-variant-numeric:tabular-nums}
+
+  .deposit-box{background:#140f07;border:1px solid var(--line);border-radius:14px;padding:20px;margin:8px 0 16px}
+  .deposit-box .amount{font-family:var(--serif);font-size:38px;color:var(--gold);line-height:1}
+  .deposit-box .desc{color:var(--muted);font-size:13px;margin-top:8px}
+  .summary{font-size:14px;color:var(--muted);background:#140f07;border:1px dashed var(--line);border-radius:12px;padding:14px;margin-bottom:16px}
+  .summary b{color:var(--cream)}
+  .form-note{font-size:12px;color:var(--muted);margin-top:14px;line-height:1.5}
+  .ok-msg{display:none;text-align:center;padding:20px}
+  .ok-msg .tick{width:64px;height:64px;border-radius:50%;background:rgba(120,180,90,.15);color:#9bd17a;display:grid;place-items:center;margin:0 auto 16px;font-size:30px;border:1px solid rgba(155,209,122,.4)}
+
+  .pay-methods{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:14px 0 4px}
+  .pay-methods .lbl{font-size:12px;color:var(--muted);width:100%;margin-bottom:2px}
+  .pay-badge{display:inline-flex;align-items:center;height:34px;padding:0 13px;border-radius:8px;border:1px solid var(--line);background:#140f07;font-size:12.5px;font-weight:700;letter-spacing:.03em}
+  .pay-badge.mir{color:#0fa36b}.pay-badge.sbp{color:#e84e3c}.pay-badge.visa{color:#9db8ff;font-style:italic}.pay-badge.mc{color:#f3b04b}.pay-badge.yk{color:#8fd14f}
+
+  /* ---------- CONTACTS / FOOTER ---------- */
+  .contacts-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:50px;align-items:stretch}
+  .info-card{display:flex;flex-direction:column;gap:22px}
+  .info-item{display:flex;gap:16px;align-items:flex-start}
+  .info-item .ic{width:48px;height:48px;border-radius:12px;flex:0 0 auto;display:grid;place-items:center;background:rgba(212,173,98,.1);border:1px solid var(--line);font-size:20px}
+  .info-item h4{font-family:var(--sans);font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:4px}
+  .info-item p{font-size:16px}
+  .info-item a:hover{color:var(--gold)}
+  .map-embed{border-radius:var(--radius);overflow:hidden;border:1px solid var(--line);min-height:360px}
+  .map-embed iframe{width:100%;height:100%;min-height:360px;border:0;filter:grayscale(.25) contrast(1.05)}
+
+  footer.site{border-top:1px solid var(--line);background:var(--bg);padding:60px 24px 30px}
+  .foot-grid{display:flex;justify-content:space-between;gap:30px;flex-wrap:wrap;align-items:flex-start}
+  .foot-brand{max-width:340px}
+  .foot-brand p{color:var(--muted);font-size:14px;margin-top:14px}
+  .soc{display:flex;gap:12px;margin-top:18px}
+  .soc a{width:42px;height:42px;border-radius:50%;border:1px solid var(--line);display:grid;place-items:center;transition:.2s;font-size:13px;font-weight:600}
+  .soc a:hover{background:var(--gold);color:#15100a;border-color:var(--gold)}
+  .foot-col h5{font-family:var(--sans);font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+  .foot-col a{display:block;color:var(--muted);font-size:14px;margin-bottom:10px;transition:.2s}
+  .foot-col a:hover{color:var(--cream)}
+  .copyright{max-width:var(--maxw);margin:42px auto 0;padding-top:22px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;color:var(--muted);font-size:13px}
+
+  .reveal{opacity:0;transform:translateY(34px);transition:.85s cubic-bezier(.16,1,.3,1)}
+  .reveal.in{opacity:1;transform:none}
+
+  /* WhatsApp floating */
+  .wa-float{position:fixed;right:22px;bottom:22px;z-index:60;width:58px;height:58px;border-radius:50%;background:#1faa55;display:grid;place-items:center;box-shadow:0 14px 30px -8px rgba(0,0,0,.6);transition:.25s}
+  .wa-float:hover{transform:scale(1.08)}
+  .wa-float svg{width:30px;height:30px;fill:#fff}
+
+  @media(max-width:900px){
+    .about-grid,.owner-grid,.booking-grid,.contacts-grid{grid-template-columns:1fr}
+    .format .wrap{grid-template-columns:1fr}
+    .gallery-grid{grid-template-columns:repeat(2,1fr)}
+    nav.links{position:fixed;inset:0 0 0 auto;width:min(80vw,320px);flex-direction:column;justify-content:center;background:rgba(16,12,8,.98);backdrop-filter:blur(14px);transform:translateX(100%);transition:.4s;gap:26px;padding:40px}
+    nav.links.open{transform:none}
+    .burger{display:flex}
+    .nav-cta{display:none}
+  }
+  @media(max-width:560px){
+    section{padding:74px 18px}
+    .gallery-grid{grid-template-columns:1fr 1fr;grid-auto-rows:150px}
+    .row{grid-template-columns:1fr}
+    .hero .facts{gap:24px}
+  }
+</style>
+</head>
+<body>
+
+<!-- ===================== NAV ===================== -->
+<header class="nav" id="nav">
+  <a href="#top" class="brand">
+    <span class="mark"><svg viewBox="0 0 40 40" fill="none" stroke="#15100a" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"><path d="M6 20 Q20 7 34 20"/><path d="M9 20 V32 H31 V20"/><path d="M17 32 V25 H23 V32"/><path d="M20 7 V4"/></svg></span>
+    <span>Баатарай&nbsp;Ургоо<small>этнокомплекс · по записи · Улан-Удэ</small></span>
+  </a>
+  <nav class="links" id="navLinks">
+    <a href="#about" onclick="closeMenu()">О нас</a>
+    <a href="#owner" onclick="closeMenu()">Гостеприимство</a>
+    <a href="#events" onclick="closeMenu()">События</a>
+    <a href="#menu" onclick="closeMenu()">Меню</a>
+    <a href="#hotel" onclick="closeMenu()">Отель</a>
+    <a href="#contacts" onclick="closeMenu()">Контакты</a>
+  </nav>
+  <a href="#booking" class="btn btn-primary nav-cta">Забронировать</a>
+  <div class="burger" id="burger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+</header>
+
+<!-- ===================== HERO ===================== -->
+<section class="hero" id="top">
+  <div class="hero-bg">
+    <!-- ВЛАДЕЛЕЦ: сохраните фото богатыря как hero.jpg рядом с index.html.
+         Если файла нет — временно покажется кадр с банкета (не «битая» картинка). -->
+    <img src="hero.jpg" alt="Богатырь и встреча гостей в национальных бурятских костюмах — этнокомплекс Баатарай Ургоо" loading="eager" fetchpriority="high" decoding="async" width="800" height="533"
+         onerror="this.onerror=null;this.src='images/tild6361-6561-4533-b537-383164613732_baatar_big20.jpg'" />
+  </div>
+  <div class="hero-inner">
+    <div class="eyebrow reveal">Камерный формат · по предварительной записи</div>
+    <h1 class="reveal">Этнокомплекс<br /><span class="accent">«Баатарай Ургоо»</span></h1>
+    <p class="tag reveal">Загородный ресторан бурятской кухни в Верхней Берёзовке. Банкеты, свадьбы,
+      миланы и юбилеи — событие, которое нельзя купить в городе.</p>
+    <div class="artist reveal">★ Дом бурятского <b>гостеприимства</b></div>
+    <div class="actions reveal">
+      <a href="#booking" class="btn btn-primary">Забронировать с предзаказом</a>
+      <a href="#events" class="btn btn-ghost">Банкеты и события</a>
+    </div>
+    <div class="facts reveal">
+      <div class="fact"><b>40</b><span>мест в кафе-юрте</span></div>
+      <div class="fact"><b>100</b><span>персон банкетный зал</span></div>
+      <div class="fact"><b>6</b><span>номеров отеля «Ноён»</span></div>
+      <div class="fact"><b>20+</b><span>лет принимаем гостей</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FORMAT STRIP ===================== -->
+<section class="format" style="padding:40px 24px">
+  <div class="wrap">
+    <div class="it reveal"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/></svg></div><div><h4>Только по записи</h4><p>Загородный формат: гость едет целенаправленно. Бронируйте стол заранее.</p></div></div>
+    <div class="it reveal"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 4h16v4H4zM6 8v12h12V8M9 12h6"/></svg></div><div><h4>Предзаказ блюд</h4><p>Выберите блюда при брони — кухня готовит ровно ваш стол, без ожидания.</p></div></div>
+    <div class="it reveal"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9 10h4.5a2 2 0 010 4H9"/></svg></div><div><h4>Депозит за стол</h4><p>Небольшая предоплата подтверждает бронь и гарантирует ваше место.</p></div></div>
+  </div>
+</section>
+
+<!-- ===================== ABOUT ===================== -->
+<section id="about">
+  <div class="wrap about-grid">
+    <div class="about-text reveal">
+      <div class="eyebrow"><span class="num">01</span> О месте</div>
+      <h2 class="section-title">Бурятская степь в&nbsp;получасе от&nbsp;города</h2>
+      <p>Этнокомплекс «Баатарай Ургоо» — в зоне отдыха горожан и гостей Республики, район Верхняя
+        Берёзовка, в окружении гор и сосен. Кафе-юрта с живым огнём на 40 человек, банкетный зал
+        до 100 персон в этностиле, мини-отель «Ноён» и летние войлочные юрты во дворе.</p>
+      <p>Мы принимаем гостей с 2001 года: свадьбы, юбилеи, миланы, конференции, приёмы почётных
+        гостей. Можно заказать фольклорную программу, фото в национальных костюмах напрокат
+        и приобрести сувениры. Рядом — Этнографический музей народов Забайкалья.</p>
+      <p>Это не проходное место «на бегу», а событие, ради которого приезжают специально.
+        Поэтому мы работаем по предварительной записи — так каждый стол получает внимание.</p>
+      <div class="chips">
+        <span class="chip">Живой огонь в юрте</span>
+        <span class="chip">VIP-юрта до 16 персон</span>
+        <span class="chip">Банкеты до 100 гостей</span>
+        <span class="chip">Фольклор</span>
+        <span class="chip">Фото в нац. костюмах</span>
+        <span class="chip">Сувениры</span>
+      </div>
+    </div>
+    <div class="about-photos reveal">
+      <figure><img src="images/tild3333-3565-4836-a438-313533656233_IMG_0271_1.jpg" width="1680" height="2240" alt="Аллея богатырей у ворот комплекса" decoding="async" loading="lazy" /></figure>
+      <figure><img src="images/tild6133-3564-4066-b834-303339623739_DSC_0251.JPG" width="1680" height="1124" alt="Комплекс среди гор и сосен" decoding="async" loading="lazy" /></figure>
+      <figure><img src="images/tild3331-3931-4661-b831-663765383164_123_022.jpg" width="1536" height="2048" alt="Свод юрты с ритуальной маской" decoding="async" loading="lazy" /></figure>
+    </div>
+  </div>
+</section>
+
+<div class="ornament reveal"><svg class="knot" viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M14 14c-5 0-5 6 0 6s6-6 12-6 6 6 0 6"/><path d="M14 26c-5 0-5-6 0-6s6 6 12 6"/><rect x="10" y="10" width="20" height="20" rx="3" opacity=".5"/></svg></div>
+
+<!-- ===================== OWNER ===================== -->
+<section class="owner" id="owner">
+  <div class="wrap owner-grid">
+    <div class="owner-photo reveal">
+      <!-- Символ хозяйки — орёл на троне в юрте (по просьбе хозяйки без личного портрета) -->
+      <img src="images/tild3061-3630-4265-b431-323232383965_IMG_9811.jpg" width="1000" height="667" alt="Интерьер юрты этнокомплекса «Баатарай Ургоо» — орёл на троне" decoding="async" loading="lazy"
+           onerror="this.src='images/tild6437-6135-4232-b561-346165626163_baatar_big6.jpg'" />
+      <span class="badge">★ Радушный дом</span>
+    </div>
+    <div class="owner-text reveal">
+      <div class="eyebrow"><span class="num">02</span> Гостеприимство</div>
+      <h2 class="section-title">Встречаем как дорогих гостей</h2>
+      <blockquote>«Встречайте своих дорогих гостей, показывайте, удивляйте — а мы вам в этом поможем».</blockquote>
+      <p>«Баатарай Ургоо» — дом, где гостя встречают по бурятской традиции. Банкет или свадьба здесь
+        не просто застолье, а приём с национальным колоритом, фольклором и встречей почётных гостей
+        по обычаю.</p>
+      <p>На знаковых событиях — торжественная национальная встреча, обряды и внимание к каждой детали.
+        То, что запоминается и пересказывается: праздник здесь звучит по-особенному.</p>
+      <a href="#events" class="btn btn-ghost" style="margin-top:8px">Провести событие у нас</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== EVENTS ===================== -->
+<section id="events">
+  <div class="wrap">
+    <div class="reveal" style="text-align:center;max-width:700px;margin:0 auto">
+      <div class="eyebrow" style="justify-content:center"><span class="num">03</span> События</div>
+      <h2 class="section-title">Банкеты, свадьбы, миланы</h2>
+      <p class="lead" style="margin:0 auto">Главное, ради чего к нам едут. Единое предзаказанное меню,
+        этно-интерьер, фольклор и фото в костюмах — праздник под ключ на 16, 40 или 100 персон.</p>
+    </div>
+    <div class="events-grid">
+      <div class="event reveal"><img src="images/tild6133-3564-4066-b834-303339623739_DSC_0251.JPG" width="1680" height="1124" alt="Свадьбы и национальные обряды" decoding="async" loading="lazy"><div class="cap"><h3>Свадьбы</h3><p>Национальные свадьбы и выездные регистрации</p></div></div>
+      <div class="event reveal"><img src="images/tild3135-6134-4433-b061-323366653664_DSC_0448.JPG" width="1680" height="1124" alt="Юбилеи и миланы" decoding="async" loading="lazy"><div class="cap"><h3>Юбилеи и миланы</h3><p>Торжества с бурятским колоритом</p></div></div>
+      <div class="event reveal"><img src="images/tild6539-3935-4837-b764-626461623166_IMG_0307_1.jpg" width="1680" height="2240" alt="Фольклорные программы" decoding="async" loading="lazy"><div class="cap"><h3>Фольклор</h3><p>Артисты Республики — живая программа</p></div></div>
+      <div class="event reveal"><img src="images/tild3630-6239-4132-b838-633430323533_DSC_0088.JPG" width="1680" height="1124" alt="Приёмы и конференции" decoding="async" loading="lazy"><div class="cap"><h3>Приёмы</h3><p>Встреча почётных гостей и конференции</p></div></div>
+    </div>
+    <div class="events-cta reveal">
+      <p>Расскажите о событии — мы подготовим меню и смету. Ответим в WhatsApp.</p>
+      <a id="waEventBtn" class="btn btn-wa" href="#" target="_blank" rel="noopener">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M.06 24l1.7-6.2A11.9 11.9 0 1 1 12 24a11.9 11.9 0 0 1-5.7-1.45L.06 24zM6.6 20.1l.37.22a9.9 9.9 0 1 0-3.3-3.3l.23.38-1 3.65 3.7-.95zM17.4 14.3c-.24-.12-1.44-.71-1.66-.8-.22-.08-.38-.12-.55.12-.16.24-.63.8-.77.96-.14.16-.28.18-.52.06-.24-.12-1.02-.38-1.94-1.2-.72-.64-1.2-1.43-1.34-1.67-.14-.24-.02-.37.1-.49.1-.1.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.55-1.32-.75-1.81-.2-.48-.4-.41-.55-.42h-.47c-.16 0-.42.06-.64.3-.22.24-.84.82-.84 2 0 1.18.86 2.32.98 2.48.12.16 1.69 2.58 4.1 3.62.57.25 1.02.4 1.37.5.58.19 1.1.16 1.51.1.46-.07 1.44-.59 1.64-1.16.2-.57.2-1.05.14-1.16-.06-.1-.22-.16-.46-.28z"/></svg>
+        Заявка на банкет в WhatsApp
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== HALLS ===================== -->
+<section class="halls" id="halls">
+  <div class="wrap">
+    <div class="reveal" style="text-align:center;max-width:680px;margin:0 auto">
+      <div class="eyebrow" style="justify-content:center"><span class="num">04</span> Залы</div>
+      <h2 class="section-title">Пространства для любого повода</h2>
+      <p class="lead" style="margin:0 auto">От ужина у живого огня до банкета на сто персон в этностиле.</p>
+    </div>
+    <div class="halls-grid">
+      <div class="hall reveal"><img src="images/tild6365-6136-4938-b035-383338376231_image-13-09-25-01-34.jpeg" width="960" height="1280" alt="Основной зал" decoding="async" loading="lazy"><div class="cap"><h3>Основной зал</h3><p>Кафе-юрта до 40 персон · живой огонь</p></div></div>
+      <div class="hall reveal"><img src="images/tild3561-3964-4264-b231-323561646434__105.jpg" width="1224" height="1632" alt="VIP-юрта" decoding="async" loading="lazy"><div class="cap"><h3>VIP-юрта</h3><p>До 16 персон для дорогих гостей</p></div></div>
+      <div class="hall reveal"><img src="images/tild6433-3161-4464-b130-373766333364_c.jpg" width="1069" height="1157" alt="Банкетный зал" decoding="async" loading="lazy"><div class="cap"><h3>Банкетный зал</h3><p>До 100 персон · свадьбы и юбилеи</p></div></div>
+      <div class="hall reveal"><img src="images/tild3138-6662-4263-b339-653834663634_006-0030-.jpg" width="1680" height="2524" alt="Малый зал" decoding="async" loading="lazy"><div class="cap"><h3>Уютный малый зал</h3><p>Для камерных встреч</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== MENU ===================== -->
+<section id="menu">
+  <div class="wrap">
+    <div class="reveal" style="text-align:center;max-width:760px;margin:0 auto">
+      <div class="eyebrow" style="justify-content:center"><span class="num">05</span> Меню</div>
+      <h2 class="section-title">Бурятская кухня</h2>
+      <p class="lead" style="margin:0 auto">Короткое меню фирменных блюд — то, что готовится стабильно и вкусно
+        каждый день. Расширенное банкетное меню — по предзаказу. Буузы, бухэлеэр, хуушуур, мясные
+        деликатесы, молочная пища по обычаю.</p>
+    </div>
+
+    <!-- Блюда — со старого сайта + названы по стратегии (бурятская классика).
+         Цен на сайте нет → placeholder. Фото с Tilda; соответствие фото↔блюдо проверить. -->
+    <div class="menu-grid">
+      <article class="dish reveal"><div class="ph"><img src="images/tild3261-3933-4661-b739-343033316239_1.jpg" width="800" height="1135" alt="Буузы" decoding="async" loading="lazy" /></div>
+        <div class="body"><span class="tagline">Бренд республики</span><h3>Буузы</h3><p>Рубленое вручную мясо в тесте, на пару. Главное блюдо стола.</p><div class="price"><b>— ₽</b><small>цена уточняется</small></div></div></article>
+      <article class="dish reveal"><div class="ph"><img src="images/tild3735-6261-4234-a363-643430383239_5.jpg" width="800" height="1149" alt="Бухэлеэр" decoding="async" loading="lazy" /></div>
+        <div class="body"><span class="tagline">Горячее</span><h3>Бухэлеэр</h3><p>Наваристый бульон с бараниной на кости — согревает и насыщает.</p><div class="price"><b>— ₽</b><small>цена уточняется</small></div></div></article>
+      <article class="dish reveal"><div class="ph"><img src="images/tild3632-3038-4565-a338-346136376234_6.jpg" width="800" height="1135" alt="Хуушуур" decoding="async" loading="lazy" /></div>
+        <div class="body"><span class="tagline">Популярное</span><h3>Хуушуур</h3><p>Жареные мясные лепёшки-чебуреки с сочной начинкой.</p><div class="price"><b>— ₽</b><small>цена уточняется</small></div></div></article>
+      <article class="dish reveal"><div class="ph"><img src="images/tild3262-3634-4665-a162-663539643235_2.jpg" width="800" height="1134" alt="Баян Тала" decoding="async" loading="lazy" /></div>
+        <div class="body"><span class="tagline">Для двоих</span><h3>Баян Тала</h3><p>Мясное плато: кровяная колбаса, эреэлжэ и орёомог.</p><div class="price"><b>— ₽</b><small>цена уточняется</small></div></div></article>
+      <article class="dish reveal"><div class="ph"><img src="images/tild3235-3931-4434-b764-323333616163_3.jpg" width="800" height="1134" alt="Салат Ая-ганга" decoding="async" loading="lazy" /></div>
+        <div class="body"><span class="tagline">Закуска</span><h3>Салат «Ая-ганга»</h3><p>Сытный салат из говяжьего рубца по бурятским традициям.</p><div class="price"><b>— ₽</b><small>цена уточняется</small></div></div></article>
+      <article class="dish reveal"><div class="ph"><img src="images/tild3464-3938-4262-a462-626561323261_7.jpg" width="800" height="1135" alt="Боовы" decoding="async" loading="lazy" /></div>
+        <div class="body"><span class="tagline">К чаю</span><h3>Боовы</h3><p>Традиционная бурятская выпечка к молочному чаю.</p><div class="price"><b>— ₽</b><small>цена уточняется</small></div></div></article>
+      <article class="dish reveal"><div class="ph"><img src="images/tild6532-3531-4733-b561-356666326530_8.jpg" width="800" height="1135" alt="Саламат" decoding="async" loading="lazy" /></div>
+        <div class="body"><span class="tagline">По обычаю</span><h3>Молочная пища</h3><p>Саламат и аарса — гостей по традиции встречают молочным.</p><div class="price"><b>— ₽</b><small>цена уточняется</small></div></div></article>
+      <article class="dish reveal"><div class="ph"><img src="images/tild3733-3764-4837-b666-653931313862_4.jpg" width="800" height="1134" alt="Десерт Тайга" decoding="async" loading="lazy" /></div>
+        <div class="body"><span class="tagline">Десерт</span><h3>«Тайга»</h3><p>Таёжное лакомство — брусника и кедровые орехи под сладким соусом.</p><div class="price"><b>— ₽</b><small>цена уточняется</small></div></div></article>
+    </div>
+    <p class="menu-note">Цены и полное банкетное меню — по запросу. При брони можно сделать предзаказ блюд,
+      чтобы кухня приготовила ровно ваш стол к назначенному времени.</p>
+    <div class="reveal" style="text-align:center;margin-top:18px">
+      <a class='btn btn-gold' href='menu.html'>Открыть полное меню · заказ по QR →</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== HOTEL ===================== -->
+<section class="hotel" id="hotel">
+  <div class="wrap">
+    <div class="reveal" style="text-align:center;max-width:680px;margin:0 auto">
+      <div class="eyebrow" style="justify-content:center"><span class="num">06</span> Мини-отель «Ноён»</div>
+      <h2 class="section-title">Шесть комфортабельных номеров</h2>
+      <p class="lead" style="margin:0 auto">Для гостей и туристов — уютное размещение в этнокомплексе. Есть номер для молодожёнов.</p>
+    </div>
+    <div class="rooms-grid">
+      <div class="room reveal"><div class="ph"><img src="images/tild3039-3265-4838-b232-356533623932_3.jpg" width="800" height="557" alt="Улзы" decoding="async" loading="lazy"></div><div class="body"><span class="tag">Студия люкс</span><h3>Улзы</h3><p>Просторный номер с большой евро-кроватью — для молодожёнов.</p></div></div>
+      <div class="room reveal"><div class="ph"><img src="images/tild3966-6531-4731-b839-623538326464_6.jpg" width="800" height="501" alt="Бадма-Сэсэг" decoding="async" loading="lazy"></div><div class="body"><span class="tag">Двухместный</span><h3>Бадма-Сэсэг</h3><p>Комфортабельный номер для двоих — две широкие кровати.</p></div></div>
+      <div class="room reveal"><div class="ph"><img src="images/tild6263-3161-4033-b039-303634633338_photo.jpg" width="800" height="504" alt="Хурдэ" decoding="async" loading="lazy"></div><div class="body"><span class="tag">Двухместный</span><h3>Хурдэ</h3><p>Комфортабельный двухместный номер.</p></div></div>
+      <div class="room reveal"><div class="ph"><img src="images/tild3963-3862-4138-b265-656534643839_image-19-01-23-04-36.jpeg" width="1680" height="2240" alt="Очир" decoding="async" loading="lazy"></div><div class="body"><span class="tag">Трёхместный</span><h3>Очир</h3><p>Отличное размещение для семьи.</p></div></div>
+      <div class="room reveal"><div class="ph"><img src="images/tild3363-3062-4537-a239-383937653465_image-19-01-23-04-36.jpeg" width="1680" height="2240" alt="Мэлхи" decoding="async" loading="lazy"></div><div class="body"><span class="tag">Двухместный</span><h3>Мэлхи</h3><p>Двухместный номер с двуспальной кроватью.</p></div></div>
+      <div class="room reveal"><div class="ph"><img src="images/tild3232-6165-4466-b262-636236636639_2.jpg" width="800" height="514" alt="Инь Янь" decoding="async" loading="lazy"></div><div class="body"><span class="tag">Эконом</span><h3>Инь Янь</h3><p>Двухместный номер эконом-класса.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== GALLERY ===================== -->
+<section id="gallery">
+  <div class="wrap">
+    <div class="reveal" style="text-align:center;max-width:680px;margin:0 auto">
+      <div class="eyebrow" style="justify-content:center"><span class="num">07</span> Галерея</div>
+      <h2 class="section-title">Атмосфера комплекса</h2>
+      <p class="lead" style="margin:0 auto">Колоритные фотозоны, аутентичный интерьер и уютный дворик в окружении гор и сосен.</p>
+    </div>
+    <div class="gallery-grid">
+      <figure class="g-wide g-tall reveal"><img src="images/tild3939-6132-4334-b932-333266656162_IMG_8815.jpg" width="1680" height="1120" alt="Интерьер кафе-юрты" decoding="async" loading="lazy"><figcaption>Кафе-юрта с живым огнём</figcaption></figure>
+      <figure class="reveal"><img src="images/tild3530-3765-4434-b834-663939616434_IMG_9508.jpg" width="1680" height="1564" alt="Зал" decoding="async" loading="lazy"><figcaption>Основной зал кафе-юрта</figcaption></figure>
+      <figure class="reveal"><img src="images/tild6132-3431-4031-b735-333263633933_DSC_0352.JPG" width="1680" height="1124" alt="Интерьер" decoding="async" loading="lazy"><figcaption>Аутентичный интерьер</figcaption></figure>
+      <figure class="g-wide reveal"><img src="images/tild6361-6561-4533-b537-383164613732_baatar_big20.jpg" width="800" height="533" alt="Банкет" decoding="async" loading="lazy"><figcaption>Банкетный зал до 100 персон</figcaption></figure>
+      <figure class="reveal"><img src="images/tild3062-6561-4831-b634-663831633636_DSC_0045.JPG" width="1000" height="669" alt="Дворик" decoding="async" loading="lazy"><figcaption>Уютный атмосферный дворик</figcaption></figure>
+      <figure class="reveal"><img src="images/tild3965-3833-4365-b966-393164386532_100.JPG" width="1680" height="869" alt="Фотозона" decoding="async" loading="lazy"><figcaption>Колоритные фотозоны</figcaption></figure>
+      <figure class="reveal"><img src="images/tild6236-3662-4636-b764-363562616266__088.jpg" width="1680" height="1120" alt="Гости" decoding="async" loading="lazy"><figcaption>Встречаем почётных гостей</figcaption></figure>
+      <figure class="reveal"><img src="images/tild6365-6565-4163-b562-396365396161_IMG_1833.jpg" width="1680" height="2240" alt="Праздничный стол" decoding="async" loading="lazy"><figcaption>Национальная кухня</figcaption></figure>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== BOOKING + PREORDER + DEPOSIT ===================== -->
+<section class="booking" id="booking">
+  <div class="wrap">
+    <div class="reveal" style="text-align:center;max-width:700px;margin:0 auto">
+      <div class="eyebrow" style="justify-content:center"><span class="num">08</span> Бронирование</div>
+      <h2 class="section-title">Бронь с предзаказом</h2>
+      <p class="lead" style="margin:0 auto">Выберите дату и блюда — кухня приготовит ровно ваш стол к назначенному
+        времени. Отправьте заявку в WhatsApp или внесите депозит онлайн.</p>
+    </div>
+
+    <div class="booking-grid">
+      <!-- ----- Форма брони (2 шага: данные+предзаказ → отправка/депозит) ----- -->
+      <div class="panel reveal">
+        <div class="steps"><div class="step-dot active" id="dot1"></div><div class="step-dot" id="dot2"></div></div>
+        <form id="bookingForm" onsubmit="return false">
+          <div class="step active" id="bStep1">
+            <h3>Детали и предзаказ</h3>
+            <p class="sub">Шаг 1 из 2 — визит и блюда</p>
+            <div class="field"><label>Имя*</label><input type="text" id="bName" placeholder="Как к вам обращаться" required /></div>
+            <div class="field"><label>Телефон*</label><input type="tel" id="bPhone" placeholder="+7 ___ ___-__-__" required /></div>
+            <div class="row">
+              <div class="field"><label>Дата*</label><input type="date" id="bDate" required /></div>
+              <div class="field"><label>Время*</label><input type="time" id="bTime" value="18:00" required /></div>
+            </div>
+            <div class="field"><label>Гостей*</label>
+              <select id="bGuests"><option>1</option><option>2</option><option selected>3</option><option>4</option><option>5</option><option>6</option><option>8</option><option>10</option><option>12</option><option>16+</option></select>
+            </div>
+            <div class="field"><label>Предзаказ блюд (по желанию)</label>
+              <div class="preorder" id="preorder"></div>
+            </div>
+            <div class="field"><label>Пожелания</label><textarea id="bWishes" placeholder="Повод, зона (VIP-юрта / банкетный зал), фольклор, фото в костюмах…"></textarea></div>
+            <button class="btn btn-primary" style="width:100%" onclick="goStep2()">Далее → отправить бронь</button>
+            <p class="form-note">* Имя, телефон, дата и время — обязательны. Образец формы: приём заявок и оплата подключаются на стороне владельца (README).</p>
+          </div>
+
+          <div class="step" id="bStep2">
+            <h3>Подтверждение брони</h3>
+            <p class="sub">Шаг 2 из 2 — отправка и депозит</p>
+            <div class="summary" id="bSummary"></div>
+
+            <a id="waBookBtn" class="btn btn-wa" style="width:100%;margin-bottom:14px" href="#" target="_blank" rel="noopener">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M.06 24l1.7-6.2A11.9 11.9 0 1 1 12 24a11.9 11.9 0 0 1-5.7-1.45L.06 24zM6.6 20.1l.37.22a9.9 9.9 0 1 0-3.3-3.3l.23.38-1 3.65 3.7-.95zM17.4 14.3c-.24-.12-1.44-.71-1.66-.8-.22-.08-.38-.12-.55.12-.16.24-.63.8-.77.96-.14.16-.28.18-.52.06-.24-.12-1.02-.38-1.94-1.2-.72-.64-1.2-1.43-1.34-1.67-.14-.24-.02-.37.1-.49.1-.1.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.55-1.32-.75-1.81-.2-.48-.4-.41-.55-.42h-.47c-.16 0-.42.06-.64.3-.22.24-.84.82-.84 2 0 1.18.86 2.32.98 2.48.12.16 1.69 2.58 4.1 3.62.57.25 1.02.4 1.37.5.58.19 1.1.16 1.51.1.46-.07 1.44-.59 1.64-1.16.2-.57.2-1.05.14-1.16-.06-.1-.22-.16-.46-.28z"/></svg>
+              Отправить бронь в WhatsApp
+            </a>
+            <a class="max-link btn btn-ghost" hidden href="#" target="_blank" rel="noopener" style="display:block;width:100%;margin-bottom:14px;text-align:center">Написать бронь в Max</a>
+
+            <div class="deposit-box">
+              <div class="amount" id="depAmount">1 000 ₽</div>
+              <div class="desc" id="depDesc">Депозит за стол — подтверждает бронь, засчитывается в счёт заказа.</div>
+            </div>
+            <div class="pay-methods">
+              <span class="lbl">Принимаем к оплате:</span>
+              <span class="pay-badge mir">МИР</span><span class="pay-badge sbp">СБП</span>
+              <span class="pay-badge visa">VISA</span><span class="pay-badge mc">Mastercard</span><span class="pay-badge yk">ЮKassa</span>
+            </div>
+            <div id="payment-widget"></div>
+            <button class="btn btn-primary" style="width:100%;margin-top:8px" id="payBtn" onclick="demoPay()">Внести депозит картой</button>
+            <button class="btn btn-ghost" style="width:100%;margin-top:10px" onclick="goStep1()">← Назад</button>
+            <p class="form-note">Кнопка оплаты — заглушка (реальные платежи не проводятся). Сумма/процент депозита настраивается в админке. Ключи мерчанта владелец вписывает сам.</p>
+          </div>
+        </form>
+        <div class="ok-msg" id="bOk">
+          <div class="tick">✓</div><h3>Заявка принята!</h3>
+          <p class="sub" id="bOkText">Мы свяжемся с вами для подтверждения брони.</p>
+          <button class="btn btn-ghost" onclick="resetBooking()">Новая бронь</button>
+        </div>
+      </div>
+
+      <!-- ----- Форма обращения ----- -->
+      <div class="panel reveal">
+        <h3>Написать нам</h3>
+        <p class="sub">Вопрос, банкет, сотрудничество — оставьте сообщение</p>
+        <form id="contactForm" onsubmit="return submitContact()">
+          <div class="field"><label>Имя*</label><input type="text" id="cName" required placeholder="Ваше имя" /></div>
+          <div class="field"><label>Телефон или e-mail*</label><input type="text" id="cContact" required placeholder="+7 … или mail@…" /></div>
+          <div class="field"><label>Сообщение*</label><textarea id="cMsg" required placeholder="Чем можем помочь?" style="min-height:120px"></textarea></div>
+          <button class="btn btn-primary" style="width:100%" type="submit">Отправить сообщение</button>
+          <a class="max-link btn btn-ghost" hidden href="#" target="_blank" rel="noopener" style="display:block;width:100%;margin-top:10px;text-align:center">Написать в Max</a>
+          <p class="form-note">Образец формы. Для приёма заявок подключите Supabase / Formspree / e-mail — см. README.</p>
+        </form>
+        <div class="ok-msg" id="cOk"><div class="tick">✓</div><h3>Спасибо!</h3><p class="sub">Ваше сообщение отправлено. Мы ответим в ближайшее время.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CONTACTS ===================== -->
+<section id="contacts">
+  <div class="wrap">
+    <div class="reveal"><div class="eyebrow"><span class="num">09</span> Контакты</div><h2 class="section-title">Как нас найти</h2></div>
+    <div class="contacts-grid">
+      <div class="info-card reveal">
+        <div class="info-item"><div class="ic">📍</div><div><h4>Адрес</h4><p>Республика Бурятия, г. Улан-Удэ,<br />ул. Докучаева, 11 · Верхняя Берёзовка</p></div></div>
+        <div class="info-item"><div class="ic">📞</div><div><h4>Телефон · WhatsApp</h4><p><a href="tel:+73012332520">+7 (3012) 33-25-20</a><br /><a href="tel:+79021667226">+7 (902) 166-72-26</a></p></div></div>
+        <div class="info-item"><div class="ic">🕒</div><div><h4>Часы работы</h4><p>Ежедневно 12:00 – 23:00 · по записи</p></div></div>
+        <div class="info-item"><div class="ic">✉️</div><div><h4>Почта</h4><p><a href="mailto:hatan-dangina@mail.ru">hatan-dangina@mail.ru</a></p></div></div>
+        <div class="info-item"><div class="ic">🔗</div><div><h4>Соцсети</h4><p><a href="https://vk.com/kafeyurtabu" target="_blank" rel="noopener">vk.com/kafeyurtabu</a><a class="max-link" hidden href="#" target="_blank" rel="noopener"> · Написать в Max</a></p></div></div>
+      </div>
+      <div class="map-embed reveal">
+        <iframe src="https://yandex.ru/map-widget/v1/?ll=107.594%2C51.830&z=15&text=%D1%83%D0%BB.%20%D0%94%D0%BE%D0%BA%D1%83%D1%87%D0%B0%D0%B5%D0%B2%D0%B0%2011%2C%20%D0%A3%D0%BB%D0%B0%D0%BD-%D0%A3%D0%B4%D1%8D" loading="lazy" title="Карта — ул. Докучаева, 11, Улан-Удэ"></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="site">
+  <div class="wrap foot-grid">
+    <div class="foot-brand">
+      <a href="#top" class="brand"><span class="mark"><svg viewBox="0 0 40 40" fill="none" stroke="#15100a" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"><path d="M6 20 Q20 7 34 20"/><path d="M9 20 V32 H31 V20"/><path d="M17 32 V25 H23 V32"/><path d="M20 7 V4"/></svg></span><span>Баатарай Ургоо</span></a>
+      <p>Этнокомплекс бурятской кухни в Улан-Удэ. Камерный формат по записи, банкеты и события в бурятском этностиле. С 2001 года.</p>
+      <div class="soc">
+        <a href="https://vk.com/kafeyurtabu" target="_blank" rel="noopener" title="ВКонтакте">VK</a>
+        <a href="https://wa.me/79021667226" target="_blank" rel="noopener" title="WhatsApp">WA</a>
+        <a class="max-link" hidden href="#" target="_blank" rel="noopener" title="Написать в Max">MAX</a>
+        <a href="tel:+73012332520" title="Позвонить">☎</a>
+      </div>
+    </div>
+    <div class="foot-col">
+      <h5>Разделы</h5>
+      <a href="#about">О нас</a><a href="#owner">Гостеприимство</a><a href="#events">События</a><a href="#menu">Меню</a><a href="#hotel">Отель</a><a href="#booking">Бронирование</a>
+    </div>
+    <div class="foot-col">
+      <h5>Контакты</h5>
+      <a href="tel:+73012332520">+7 (3012) 33-25-20</a>
+      <a href="https://wa.me/79021667226" target="_blank" rel="noopener">WhatsApp: +7 902 166-72-26</a>
+      <a href="mailto:hatan-dangina@mail.ru">hatan-dangina@mail.ru</a>
+      <a href="#">Улан-Удэ, ул. Докучаева, 11</a>
+      <a href="#">Ежедневно 12:00–23:00 · по записи</a>
+    </div>
+  </div>
+  <div class="copyright">
+    <span>© <span id="year"></span> Этнокомплекс «Баатарай Ургоо». Все права защищены.</span>
+  </div>
+</footer>
+
+<a class="wa-float" id="waFloat" href="https://wa.me/79021667226" target="_blank" rel="noopener" title="Написать в WhatsApp">
+  <svg viewBox="0 0 24 24"><path d="M.06 24l1.7-6.2A11.9 11.9 0 1 1 12 24a11.9 11.9 0 0 1-5.7-1.45L.06 24zM6.6 20.1l.37.22a9.9 9.9 0 1 0-3.3-3.3l.23.38-1 3.65 3.7-.95zM17.4 14.3c-.24-.12-1.44-.71-1.66-.8-.22-.08-.38-.12-.55.12-.16.24-.63.8-.77.96-.14.16-.28.18-.52.06-.24-.12-1.02-.38-1.94-1.2-.72-.64-1.2-1.43-1.34-1.67-.14-.24-.02-.37.1-.49.1-.1.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.55-1.32-.75-1.81-.2-.48-.4-.41-.55-.42h-.47c-.16 0-.42.06-.64.3-.22.24-.84.82-.84 2 0 1.18.86 2.32.98 2.48.12.16 1.69 2.58 4.1 3.62.57.25 1.02.4 1.37.5.58.19 1.1.16 1.51.1.46-.07 1.44-.59 1.64-1.16.2-.57.2-1.05.14-1.16-.06-.1-.22-.16-.46-.28z"/></svg>
+</a>
+
+<!-- Плавающая кнопка Max (появляется, если задана ссылка в админке) -->
+<a class="max-link" id="maxFloat" hidden href="#" target="_blank" rel="noopener" title="Написать в Max"
+   style="display:flex;position:fixed;right:24px;bottom:92px;z-index:60;width:56px;height:56px;border-radius:50%;
+   background:linear-gradient(135deg,#2b7dff,#7a5bff);color:#fff;align-items:center;justify-content:center;
+   font-family:Inter,system-ui,Arial,sans-serif;font-weight:800;font-size:15px;letter-spacing:.02em;
+   box-shadow:0 8px 24px rgba(0,0,0,.28);text-decoration:none">MAX</a>
+
+<script>
+/* ====== настройки владельца ====== */
+const WA_PHONE='79021667226';                 // WhatsApp ресторана (без +)
+const DEFAULT_DEPOSIT={type:'fixed', value:1000}; // запасные значения, если в админке не задано
+
+const nav=document.getElementById('nav'),navLinks=document.getElementById('navLinks');
+addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>40));
+function toggleMenu(){navLinks.classList.toggle('open');}
+function closeMenu(){navLinks.classList.remove('open');}
+const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+document.getElementById('year').textContent=new Date().getFullYear();
+
+/* ---------- ПРЕДЗАКАЗ: список блюд ---------- */
+const MENU=[
+  {id:'buuzy',name:'Буузы',note:'на пару, шт'},
+  {id:'buhler',name:'Бухэлеэр',note:'бульон, порц'},
+  {id:'huushuur',name:'Хуушуур',note:'жареные, шт'},
+  {id:'bayan',name:'Баян Тала',note:'плато для двоих'},
+  {id:'salat',name:'Салат «Ая-ганга»',note:'порц'},
+  {id:'boovy',name:'Боовы',note:'к чаю, порц'},
+  {id:'taiga',name:'Десерт «Тайга»',note:'порц'},
+];
+const qty={};
+(function renderPreorder(){
+  const box=document.getElementById('preorder');
+  box.innerHTML=MENU.map(m=>`<div class="po-item">
+    <div class="po-name">${m.name}<small>${m.note}</small></div>
+    <div class="stepper">
+      <button type="button" onclick="chQty('${m.id}',-1)">−</button>
+      <span class="qty" id="q_${m.id}">0</span>
+      <button type="button" onclick="chQty('${m.id}',1)">+</button>
+    </div></div>`).join('');
+})();
+function chQty(id,d){qty[id]=Math.max(0,(qty[id]||0)+d);document.getElementById('q_'+id).textContent=qty[id];}
+function orderText(){
+  return MENU.filter(m=>qty[m.id]>0).map(m=>`${qty[m.id]}× ${m.name}`).join(', ');
+}
+
+/* ---------- ДЕПОЗИТ из админки (localStorage bu_settings) ---------- */
+function depositConfig(){
+  try{const s=JSON.parse(localStorage.getItem('bu_settings')||'{}');
+    if(s.depositType){return {type:s.depositType, value:Number(s.depositValue)||0};}}catch(e){}
+  return DEFAULT_DEPOSIT;
+}
+function depositLabel(){
+  const d=depositConfig();
+  return d.type==='percent' ? d.value+'% от суммы заказа' : (d.value).toLocaleString('ru-RU')+' ₽';
+}
+function refreshDeposit(){
+  document.getElementById('depAmount').textContent=depositLabel();
+  const d=depositConfig();
+  document.getElementById('depDesc').textContent = d.type==='percent'
+    ? 'Депозит — '+d.value+'% от суммы заказа/банкета. Засчитывается в счёт.'
+    : 'Фиксированный депозит за стол. Засчитывается в счёт заказа.';
+  document.getElementById('payBtn').textContent='Внести депозит · '+depositLabel();
+}
+
+/* ---------- БРОНЬ: шаги ---------- */
+let currentBookingId=null;
+function goStep2(){
+  const name=val('bName'),phone=val('bPhone'),date=val('bDate'),time=val('bTime'),guests=val('bGuests');
+  if(!name||!phone||!date||!time){alert('Заполните имя, телефон, дату и время.');return;}
+  const order=orderText();
+  document.getElementById('bSummary').innerHTML=
+    `<b>${name}</b>, ${phone}<br />${date} в ${time} · гостей: ${guests}`
+    +(order?`<br />Предзаказ: ${order}`:'')
+    +(val('bWishes')?`<br />Пожелания: ${val('bWishes')}`:'');
+  // WhatsApp с готовым составом
+  const msg=`Здравствуйте! Бронь в «Баатарай Ургоо».%0A`
+    +`Имя: ${enc(name)}%0AТелефон: ${enc(phone)}%0A`
+    +`Дата: ${enc(date)} в ${enc(time)}%0AГостей: ${enc(guests)}%0A`
+    +(order?`Предзаказ: ${enc(order)}%0A`:'')
+    +(val('bWishes')?`Пожелания: ${enc(val('bWishes'))}%0A`:'')
+    +`Депозит: ${enc(depositLabel())}`;
+  document.getElementById('waBookBtn').href=`https://wa.me/${WA_PHONE}?text=${msg}`;
+  // сохраняем для образца админки
+  try{const l=JSON.parse(localStorage.getItem('bu_bookings')||'[]');currentBookingId='b'+Date.now();
+    l.push({id:currentBookingId,created:Date.now(),name,phone,date,time,guests,order,wishes:val('bWishes'),status:'new'});
+    localStorage.setItem('bu_bookings',JSON.stringify(l));}catch(e){}
+  refreshDeposit();
+  switchStep(2);
+}
+function goStep1(){switchStep(1);}
+function switchStep(n){
+  document.getElementById('bStep1').classList.toggle('active',n===1);
+  document.getElementById('bStep2').classList.toggle('active',n===2);
+  document.getElementById('dot2').classList.toggle('active',n===2);
+}
+function demoPay(){
+  try{const l=JSON.parse(localStorage.getItem('bu_bookings')||'[]');const b=l.find(x=>x.id===currentBookingId);
+    if(b){b.status='paid';localStorage.setItem('bu_bookings',JSON.stringify(l));}}catch(e){}
+  document.querySelector('#bookingForm').style.display='none';
+  document.querySelector('.booking .steps').style.display='none';
+  document.getElementById('bOk').style.display='block';
+  document.getElementById('bOkText').textContent='Бронь сохранена. После подключения оплаты здесь пройдёт списание депозита ('+depositLabel()+').';
+}
+function resetBooking(){
+  document.querySelector('#bookingForm').style.display='block';
+  document.querySelector('.booking .steps').style.display='flex';
+  document.getElementById('bOk').style.display='none';switchStep(1);
+  ['bName','bPhone','bDate','bWishes'].forEach(id=>document.getElementById(id).value='');
+  MENU.forEach(m=>{qty[m.id]=0;document.getElementById('q_'+m.id).textContent='0';});
+}
+function submitContact(){
+  if(!val('cName')||!val('cContact')||!val('cMsg'))return false;
+  var msg='Здравствуйте! Сообщение с сайта «Баатарай Ургоо».%0A'
+    +'Имя: '+enc(val('cName'))+'%0AКонтакт: '+enc(val('cContact'))+'%0A'
+    +'Сообщение: '+enc(val('cMsg'));
+  window.open('https://wa.me/'+WA_PHONE+'?text='+msg,'_blank');
+  document.getElementById('contactForm').style.display='none';
+  document.getElementById('cOk').style.display='block';return false;
+}
+function val(id){return document.getElementById(id).value.trim();}
+function enc(s){return encodeURIComponent(s);}
+document.getElementById('bDate').min=new Date().toISOString().split('T')[0];
+
+/* WhatsApp для заявки на банкет */
+document.getElementById('waEventBtn').href=
+  `https://wa.me/${WA_PHONE}?text=`+enc('Здравствуйте! Хочу обсудить событие (банкет/свадьба/юбилей) в «Баатарай Ургоо». Дата, число гостей: ');
+
+refreshDeposit();
+</script>
+
+<!-- Редактируемый слой: контент + загрузчик (дизайн не меняется) -->
+<script src="content.js"></script>
+<script src="content-loader.js"></script>
+</body>
+</html>
